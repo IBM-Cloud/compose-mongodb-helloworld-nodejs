@@ -27,7 +27,7 @@ compose-mongodb-helloworld-nodejs is a sample Bluemix application that shows you
 
 7. Create the Compose for MongoDB service in Bluemix if you haven't already done so.
 
-  **Note :** The Compose for MongoDB service does not offer a free plan. For details of pricing, see the _Pricing Plans_ section of the [Compose for MongoDB service](compose_for_mongodb_url) in Bluemix.
+  **Note :** The Compose for MongoDB service does not offer a free plan. For details of pricing, see the _Pricing Plans_ section of the [Compose for MongoDB service][compose_for_mongodb_url] in Bluemix.
 
   ```
   $ cf create-service compose-mongodb-helloworld-nodejs Standard my-compose-for-mongodb-service
