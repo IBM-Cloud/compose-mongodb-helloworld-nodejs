@@ -33,7 +33,13 @@ compose-mongodb-helloworld-nodejs is a sample Bluemix application that shows you
   $ cf create-service compose-for-mongodb Standard my-compose-for-mongodb-service
   ```
 
-8. Push the app to Bluemix. When you push the app it is bound to the service specified in the manifest file.
+8. Bind the service to the application.
+
+  ```
+  $ cf bind-service compose-mongodb-helloworld-nodejs my-compose-for-mongodb-service
+  ```
+  
+9. Push the app to Bluemix. When you push the app it is bound to the service specified in the manifest file.
 
   ```
   $ cf push
