@@ -30,7 +30,7 @@ const util = require('util')
 const assert = require('assert');
 
 // We want to extract the port to publish our app on
-var port = process.env.VCAP_APP_PORT || 8080;
+var port = process.env.PORT || 8080;
 
 // Then we'll pull in the database client library
 var MongoClient = require("mongodb").MongoClient;
