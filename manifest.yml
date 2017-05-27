@@ -1,7 +1,7 @@
 ---
 applications:
 - name:    compose-mongodb-helloworld-nodejs
-  host:    compose-mongodb-helloworld-nodejs
+  host:    compose-mongodb-aasif-nodejs
   memory:  128M
   services:
     - my-compose-for-mongodb-service
