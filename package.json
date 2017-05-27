@@ -1,33 +1,16 @@
 {
-  "name": "compose-mongodb-helloworld-nodejs",
+  "name": "test",
   "version": "0.0.0",
+  "description": "test",
+  "main": "server.js",
+  "author": {
+    "name": "1012376"
+  },
   "dependencies": {
     "body-parser": "^1.15.2",
-    "cf-deployment-tracker-client": "*",
-    "cfenv": "^1.0.3",
-    "commander": "^2.6.0",
-    "express": "~4.x",
-    "http-post": "^0.1.1",
-    "http-proxy": "^1.8.1",
-    "mongodb": "^2.2.9"
-  },
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/IBM-Bluemix/compose-mongodb-helloworld-nodejs.git"
-  },
-  "author": "IBM Corp.",
-  "contributors": [
-    {
-      "name": "Neil Dewhurst",
-      "email": "ndewhurs@uk.ibm.com"
-    }
-  ],
-  "bugs": {
-    "url": "https://github.com/IBM-Bluemix/compose-mongodb-helloworld-nodejs/issues"
-  },
-  "license": "Apache-2.0"
+    "busboy-body-parser": "^0.3.0",
+    "express": "^4.14.0",
+    "gridfs-stream": "^1.1.1",
+    "mongoose": "^4.7.6"
+  }
 }
