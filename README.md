@@ -28,9 +28,9 @@ compose-mongodb-helloworld-nodejs is a sample Bluemix application that shows you
   - Change the `host` value to something unique. The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`.
   - Change the `name` value. The value you choose will be the name of the app as it appears in your Bluemix dashboard.
 
-7. If you have already created a Compose for Elasticsearch service in Bluemix, update the `service` value in `manifest.yml` to match the name of your service. If you don't already have a Compose for Elasticsearch service in Bluemix, you can create one now using the `create-service` command.
+7. If you have already created a Compose for MongoDB service in Bluemix, update the `service` value in `manifest.yml` to match the name of your service. If you don't already have a Compose for MongoDB service in Bluemix, you can create one now using the `create-service` command.
 
-  - **Note :** The Compose for Elasticsearch service does not offer a free plan. For details of pricing, see the _Pricing Plans_ section of the [Compose for Elasticsearch service][compose_for_mongodb_url] in Bluemix.
+  - **Note :** The Compose for MongoDB service does not offer a free plan. For details of pricing, see the _Pricing Plans_ section of the [Compose for MongoDB service][compose_for_mongodb_url] in Bluemix.
 
   - You will need to specify the service plan that your service will use, which can be _Standard_ or _Enterprise_. This readme file assumes that you will use the _Standard_ plan. To use the _Enterprise_ plan you will need to create an instance of the Compose Enterprise service first. Compose Enterprise is a service which provides a private isolated cluster for your Compose databases. For information on Compose Enterprise and how to provision your app into a Compose Enterprise cluster, see the [Compose Enterprise for Bluemix help](https://console.ng.bluemix.net/docs/services/ComposeEnterprise/index.html).
 
