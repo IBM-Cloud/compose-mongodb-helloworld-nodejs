@@ -65,13 +65,11 @@ var mongodb;
 // call. Among those SSL settings is the SSL CA, into which we pass the array
 // wrapped and now decoded ca_certificate_base64,
 MongoClient.connect(credentials.uri, {
-        mongos: {
             ssl: true,
             sslValidate: true,
             sslCA: ca,
             poolSize: 1,
             reconnectTries: 1
-        }
     },
     function(err, db) {
         // Here we handle the async response. This is a simple example and
@@ -121,5 +119,3 @@ app.get("/words", function(request, response) {
 
 // Now we go and listen for a connection.
 app.listen(port);
-
-require("cf-deployment-tracker-client").track();
