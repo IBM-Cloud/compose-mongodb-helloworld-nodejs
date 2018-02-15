@@ -37,10 +37,22 @@ var MongoClient = require("mongodb").MongoClient;
 
 // Now lets get cfenv and ask it to parse the environment variable
 var cfenv = require('cfenv');
-var appenv = cfenv.getAppEnv();
+
+// load local VCAP configuration  and service credentials
+var vcapLocal;
+try {
+  vcapLocal = require('./vcap-local.json');
+  console.log("Loaded local VCAP", vcapLocal);
+} catch (e) { 
+  console.log(e)
+}
+
+const appEnvOpts = vcapLocal ? { vcap: vcapLocal} : {}
+
+const appEnv = cfenv.getAppEnv(appEnvOpts);
 
 // Within the application environment (appenv) there's a services object
-var services = appenv.services;
+var services = appEnv.services;
 
 // The services object is a map named by service so we extract the one for MongoDB
 var mongodb_services = services["compose-for-mongodb"];
