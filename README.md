@@ -18,7 +18,7 @@ compose-mongodb-helloworld-nodejs is a sample IBM Cloud application that shows y
 
   **Note:** If you have a federated user ID, use the `bx login --sso` command to log in with your single sign on ID.
 
-4. Make sure you are targetting the correct IBM Cloud org and space.
+4. Make sure you are targeting the correct IBM Cloud org and space.
 
   ```
   bx target --cf
@@ -26,32 +26,38 @@ compose-mongodb-helloworld-nodejs is a sample IBM Cloud application that shows y
 
   Choose from the options provided. If you have already created the service, use the same options here as you used when creating the service.
 
-5. Clone the app to your local environment from your terminal using the following command:
+5. Create your service.
 
-  ```
-  git clone https://github.com/IBM-Cloud/compose-mongodb-helloworld-nodejs.git
-  ```
+  If you don't already have a Compose for MongoDB service in IBM Cloud, you can create one now using the `create-service` command.
 
-6. `cd` into this newly created directory
+  **Note :** The Compose for MongoDB service does not offer a free plan. For details of pricing, see the [Pricing](https://console.bluemix.net/docs/services/ComposeForMongoDB/pricing.html) page of the Compose for MongoDB documentation.
 
-7. Update the `manifest.yml` file.
+  You will need to specify the service plan that your service will use, which can be _Standard_ or _Enterprise_. This readme file assumes that you will use the _Standard_ plan. To use the _Enterprise_ plan you will need to create an instance of the Compose Enterprise service first. Compose Enterprise is a service which provides a private isolated cluster for your Compose databases. For information on Compose Enterprise and how to provision your app into a Compose Enterprise cluster, see the [Compose Enterprise for IBM Cloud help](https://console.bluemix.net/docs/services/ComposeEnterprise/index.html).
 
-  - Change the `host` value to something unique. The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`.
-  - Change the `name` value. The value you choose will be the name of the app as it appears in your IBM Cloud dashboard.
-
-  If you have already created a Compose for MongoDB service in IBM Cloud, update the `service` value in `manifest.yml` to match the name of your service. If you don't already have a Compose for MongoDB service in IBM Cloud, you can create one now using the `create-service` command.
-
-  - **Note :** The Compose for MongoDB service does not offer a free plan. For details of pricing, see the _Pricing Plans_ section of the [Compose for MongoDB service][compose_for_mongodb_url] in IBM Cloud.
-
-  - You will need to specify the service plan that your service will use, which can be _Standard_ or _Enterprise_. This readme file assumes that you will use the _Standard_ plan. To use the _Enterprise_ plan you will need to create an instance of the Compose Enterprise service first. Compose Enterprise is a service which provides a private isolated cluster for your Compose databases. For information on Compose Enterprise and how to provision your app into a Compose Enterprise cluster, see the [Compose Enterprise for IBM Cloud help](https://console.bluemix.net/docs/services/ComposeEnterprise/index.html).
-
-  To create your service:
+  To create your service, use the `create-service` command, specifying the service identifier, `compose-for-mongodb`, the service plan and a name for your new service instance. For example, to create a service called "my-compose-for-mongodb-service" on the _Standard_ plan, the command would be:
 
   ```
   bx cf create-service compose-for-mongodb Standard my-compose-for-mongodb-service
   ```
 
-8. Push the app to IBM Cloud. When you push the app it will automatically be bound to the service.
+  The actual provisioning of the service can take a few minutes, so while that's happening you can clone the sample app, update it so it is ready to be bound to your service, and push the app to IBM Cloud.
+
+6. Clone the app to your local environment from your terminal using the following command:
+
+  ```
+  git clone https://github.com/IBM-Cloud/compose-mongodb-helloworld-nodejs.git
+  ```
+
+7. `cd` into this newly created directory. The code for connecting to the service, and reading from and updating the database can be found in `server.js`. See [Code Structure](#code-structure) and the code comments for information on the app's functions. There's also a `public` directory, which contains the html, style sheets and javascript for the web app. For now, the only file you need to update is the application manifest.
+
+8. Update the `manifest.yml` file.
+
+  - Change the `host` value to something unique. The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`.
+  - Change the `name` value. The value you choose will be the name of the app as it appears in your IBM Cloud dashboard.
+
+  Update the `service` value in `manifest.yml` to match the name of your service.
+
+9. Push the app to IBM Cloud. When you push the app it will automatically be bound to the service.
 
   ```
   bx cf push
