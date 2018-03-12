@@ -14,26 +14,28 @@
  * limitations under the License.
  */
 
- // First add the obligatory web framework
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
+// Add the express web framework
+const express = require("express");
+const fs = require("fs");
+const app = express();
 
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+// Use body-parser to handle the PUT data
+const bodyParser = require("body-parser");
+app.use(
+    bodyParser.urlencoded({
+        extended: false
+    })
+);
 
+// Then we'll pull in the database client library
+const MongoClient = require("mongodb").MongoClient;
 
 // Util is handy to have around, so thats why that's here.
 const util = require('util')
 // and so is assert
 const assert = require('assert');
 
-// We want to extract the port to publish our app on
-var port = process.env.PORT || 8080;
 
-// Then we'll pull in the database client library
-var MongoClient = require("mongodb").MongoClient;
 
 // Now lets get cfenv and ask it to parse the environment variable
 var cfenv = require('cfenv');
@@ -42,9 +44,9 @@ var cfenv = require('cfenv');
 var vcapLocal;
 try {
   vcapLocal = require('./vcap-local.json');
-  console.log("Loaded local VCAP", vcapLocal);
+  console.log("Loaded local VCAP");
 } catch (e) { 
-  console.log(e)
+    // console.log(e)
 }
 
 const appEnvOpts = vcapLocal ? { vcap: vcapLocal} : {}
@@ -52,38 +54,43 @@ const appEnvOpts = vcapLocal ? { vcap: vcapLocal} : {}
 const appEnv = cfenv.getAppEnv(appEnvOpts);
 
 // Within the application environment (appenv) there's a services object
-var services = appEnv.services;
+let services = appEnv.services;
 
 // The services object is a map named by service so we extract the one for MongoDB
-var mongodb_services = services["compose-for-mongodb"];
+let mongodb_services = services["compose-for-mongodb"];
 
 // This check ensures there is a services for MongoDB databases
-assert(!util.isUndefined(mongodb_services), "Must be bound to compose-for-mongodb services");
+assert(!util.isUndefined(mongodb_services), "App must be bound to compose-for-mongodb service");
 
 // We now take the first bound MongoDB service and extract it's credentials object
-var credentials = mongodb_services[0].credentials;
+let credentials = mongodb_services[0].credentials;
+
+// Setting nothing in the options will assume no SSL
+let options = {};
 
 // Within the credentials, an entry ca_certificate_base64 contains the SSL pinning key
 // We convert that from a string into a Buffer entry in an array which we use when
 // connecting.
-var ca = [new Buffer(credentials.ca_certificate_base64, 'base64')];
+let ca = [new Buffer(credentials.ca_certificate_base64, 'base64')];
+
+options = {
+  ssl: true,
+  sslValidate: true,
+  sslCA: ca
+};
+
+// We want to extract the port to publish our app on
+let port = process.env.PORT || 8080;
 
 // This is a global variable we'll use for handing the MongoDB client around
-var mongodb;
+let mongodb;
 
 // This is the MongoDB connection. From the application environment, we got the
 // credentials and the credentials contain a URI for the database. Here, we
 // connect to that URI, and also pass a number of SSL settings to the
 // call. Among those SSL settings is the SSL CA, into which we pass the array
 // wrapped and now decoded ca_certificate_base64,
-MongoClient.connect(credentials.uri, {
-            ssl: true,
-            sslValidate: true,
-            sslCA: ca,
-            poolSize: 1,
-            reconnectTries: 1
-    },
-    function(err, db) {
+MongoClient.connect(credentials.uri, options, function(err, db) {
         // Here we handle the async response. This is a simple example and
         // we're not going to inject the database connection into the
         // middleware, just save it in a global variable, as long as there
@@ -100,34 +107,72 @@ MongoClient.connect(credentials.uri, {
     }
 );
 
+// Add a word to the database
+function addWord(word, definition) {
+  return new Promise(function(resolve, reject) {
+      mongodb.collection("words").insertOne({
+              word: word,
+              definition: definition
+          },
+          function(error, result) {
+              if (error) {
+                  reject(error);
+              } else {
+                  resolve(result);
+              }
+          }
+      );
+  });
+}
+
+// Get words from the database
+function getWords() {
+  return new Promise(function(resolve, reject) {
+      // we call on the connection to return us all the documents in the words collection.
+      mongodb
+          .collection("words")
+          .find()
+          .toArray(function(err, words) {
+              if (err) {
+                  reject(err);
+              } else {
+                  resolve(words);
+              }
+          });
+  });
+}
+
 // With the database going to be open as some point in the future, we can
 // now set up our web server. First up we set it to server static pages
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + "/public"));
 
-// Add words to the database
+// The user has clicked submit to add a word and definition to the database
+// Send the data to the addWord function and send a response if successful
 app.put("/words", function(request, response) {
-  mongodb.collection("words").insertOne( {
-    word: request.body.word, definition: request.body.definition}, function(error, result) {
-      if (error) {
-        response.status(500).send(error);
-      } else {
-        response.send(result);
-      }
-    });
+    addWord(request.body.word, request.body.definition)
+        .then(function(resp) {
+            response.send(resp);
+        })
+        .catch(function(err) {
+            console.log(err);
+            response.status(500).send(err);
+        });
 });
 
-// Then we create a route to handle our example database call
+// Read from the database when the page is loaded or after a word is successfully added
+// Use the getWords function to get a list of words and definitions from the database
 app.get("/words", function(request, response) {
-  // and we call on the connection to return us all the documents in the
-  // words collection.
-  mongodb.collection("words").find().toArray(function(err, words) {
-    if (err) {
-     response.status(500).send(err);
-    } else {
-     response.send(words);
-    }
-  });
+    getWords()
+        .then(function(words) {
+            response.send(words);
+        })
+        .catch(function(err) {
+            console.log(err);
+            response.status(500).send(err);
+        });
 });
 
-// Now we go and listen for a connection.
-app.listen(port);
+// Listen for a connection.
+app.listen(port, function() {
+    console.log("Server is listening on port " + port);
+});
