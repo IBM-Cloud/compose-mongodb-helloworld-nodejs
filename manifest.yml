@@ -1,7 +1,8 @@
 ---
-applications:
-- name:    compose-mongodb-helloworld-nodejs
-  host:    compose-mongodb-helloworld-nodejs
-  memory:  128M
-  services:
-    - my-compose-for-mongodb-service
+ applications:
+ - name: compose-mongodb-helloworld-nodejs
+   routes:
+   - route: a-name-for-the-host.eu-gb.mybluemix.net
+   memory:  128M
+   services:
+     - my-compose-for-mongodb-service
