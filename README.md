@@ -13,7 +13,7 @@ compose-mongodb-helloworld-nodejs is a sample IBM Cloud application that shows y
 3. Connect to IBM Cloud in the command line tool and follow the prompts to log in.
 
   ```
-  bx login
+  ibmcloud login
   ```
 
   **Note:** If you have a federated user ID, use the `bx login --sso` command to log in with your single sign on ID.
@@ -21,7 +21,7 @@ compose-mongodb-helloworld-nodejs is a sample IBM Cloud application that shows y
 4. Make sure you are targeting the correct IBM Cloud org and space.
 
   ```
-  bx target --cf
+  ibmcloud target --cf
   ```
 
   Choose from the options provided. If you have already created the service, use the same options here as you used when creating the service.
@@ -37,7 +37,7 @@ compose-mongodb-helloworld-nodejs is a sample IBM Cloud application that shows y
   To create your service, use the `create-service` command, specifying the service identifier, `compose-for-mongodb`, the service plan and a name for your new service instance. For example, to create a service called "my-compose-for-mongodb-service" on the _Standard_ plan, the command would be:
 
   ```
-  bx cf create-service compose-for-mongodb Standard my-compose-for-mongodb-service
+  ibmcloud cf create-service compose-for-mongodb Standard my-compose-for-mongodb-service
   ```
 
   The actual provisioning of the service can take a few minutes, so while that's happening you can clone the sample app, update it so it is ready to be bound to your service, and push the app to IBM Cloud.
@@ -52,15 +52,15 @@ compose-mongodb-helloworld-nodejs is a sample IBM Cloud application that shows y
 
 8. Update the `manifest.yml` file.
 
-  - Change the `host` value to something unique. The host you choose will determinate the subdomain of your application's URL:  `<host>.mybluemix.net`.
-  - Change the `name` value. The value you choose will be the name of the app as it appears in your IBM Cloud dashboard.
+  - Change the `name` value to something unique. The value you choose will be the name of the app as it appears in your IBM Cloud dashboard.
+  - Change the `route` value. This will be the sub-domain your app will appear on. This could simply be the app name plus `.mybluemix.net`, or if in another region, `.regionid.mybluemix.net` e.g. `.eu-gb.mybluemix.net`.
 
   Update the `service` value in `manifest.yml` to match the name of your service.
 
 9. Push the app to IBM Cloud. When you push the app it will automatically be bound to the service.
 
   ```
-  bx cf push
+  ibmcloud cf push
   ```
 
 Your application is now running at `<host>.mybluemix.net`.
