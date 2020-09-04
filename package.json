@@ -8,7 +8,7 @@
     "express": "~4.x",
     "http-post": "^0.1.1",
     "http-proxy": "^1.8.1",
-    "mongodb": "^2.2.9"
+    "mongodb": "^3.1.13"
   },
   "main": "server.js",
   "scripts": {
